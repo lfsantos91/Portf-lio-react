@@ -1,81 +1,131 @@
-/*import { Github, Linkedin } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("inicio");
+  const [showTopButton, setShowTopButton] = useState(false);
+
+  useEffect(() => {
+    const sections = document.querySelectorAll("main section[id]");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      {
+        rootMargin: "-30% 0px -60% 0px"
+      }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowTopButton(window.scrollY > 300);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+  };
+}, []);
+
+  useEffect(() => {
+    const handlekeyDown = (event) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handlekeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handlekeyDown);
+    };
+  }, []);
 
   return (
+    <>
     <header className="header">
       <div className="header-container">
+
         <a href="#inicio" className="logo">
-          Luis Felipe<span>.</span>
+          Luis Felipe Santos da Silva<span>.</span>
         </a>
 
         <button
           className="menu-toggle"
           onClick={() => setMenuOpen(!menuOpen)}
+          aria-expanded={menuOpen}
+          aria-controls="main-navigation"
         >
+
           {menuOpen ? "Fechar" : "Menu"}
         </button>
 
-        
-<nav className={menuOpen ? "nav active" : "nav"}>
-  <a href="#inicio" onClick={() => setMenuOpen(false)}>Início</a>
-  <a href="#sobre" onClick={() => setMenuOpen(false)}>Sobre</a>
-  <a href="#experiencia" onClick={() => setMenuOpen(false)}>Experiência</a>
-  <a href="#habilidades" onClick={() => setMenuOpen(false)}>Habilidades</a>
-  <a href="#projetos" onClick={() => setMenuOpen(false)}>Projetos</a>
-  <a href="#contato" onClick={() => setMenuOpen(false)}>Contato</a>
+        <nav
+          id="main-navigation"
+          className={menuOpen ? "nav active" : "nav"}>
 
-<a
-  href="https://github.com/lfsantos91"
-  target="_blank"
-  rel="noreferrer"
-  aria-label="GitHub"
->
-  <Github size={19} />
-</a>
+          <a
+           href="#inicio"
+           className={activeSection === "inicio" ? "active-link" : ""}
+           onClick={() => setMenuOpen(false)}
+           >
+            Início
+          </a>
+          
+          <a
+           href="#sobre"
+           className={activeSection === "sobre" ? "active-link" : ""}
+           onClick={() => setMenuOpen(false)}
+           >
+            Sobre
+          </a>
 
-<a
-  href="https://www.linkedin.com/in/luis-felipe1991/"
-  target="_blank"
-  rel="noreferrer"
-  aria-label="LinkedIn"
->
-  <Linkedin size={19} />
-</a>
+          <a
+           href="#experiencia"
+           className={activeSection === "experiencia" ? "active-link" : ""}
+           onClick={() => setMenuOpen(false)}
+           >
+            Experiência
+          </a>
 
-</nav>
+           <a
+           href="#habilidades"
+           className={activeSection === "habilidades" ? "active-link" : ""}
+           onClick={() => setMenuOpen(false)}
+           >
+            Habilidades
+          </a>
 
-      </div>
-    </header>
-  );
-}
+           <a
+           href="#projetos"
+           className={activeSection === "projetos" ? "active-link" : ""}
+           onClick={() => setMenuOpen(false)}
+           >
+            Projetos
+          </a>
 
-export default Header;*/
+          <a
+           href="#contato"
+           className={activeSection === "contato" ? "active-link" : ""}
+           onClick={() => setMenuOpen(false)}
+           >
+            Contatos
+           </a>
 
-
-import { useState } from "react";
-
-function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  return (
-    <header className="header">
-      <div className="header-container">
-
-        <a href="#inicio" className="logo">
-          Luis Felipe<span>.</span>
-        </a>
-
-        <button
-          className="menu-toggle"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
-          {menuOpen ? "Fechar" : "Menu"}
-        </button>
-
-        <nav className={menuOpen ? "nav active" : "nav"}>
           <a
             href="https://github.com/lfsantos91"
             target="_blank"
@@ -116,6 +166,23 @@ function Header() {
         </nav>
       </div>
     </header>
+
+    {showTopButton && (
+      <button
+        className="back-to-top"
+        onClick={() => {
+          window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+          });
+        }}
+        aria-label="Voltar ao topo"
+        title="Voltar ao topo"
+      >
+        ↑
+      </button>
+    )}
+    </>
   );
 }
 

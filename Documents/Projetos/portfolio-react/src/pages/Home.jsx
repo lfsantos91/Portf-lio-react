@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 // Estilo das habilidades
 const skillStyle = {
   background: "#14243a",
@@ -15,10 +17,43 @@ const contactStyle = {
   border: "1px solid #244563",
   padding: "15px",
   borderRadius: "8px",
-  transition: "0.3s"
+  transition: "all 0.3s ease",
+  position: "relative"
 };
 
 function Home() {
+
+  useEffect(() => {
+    const elements = document.querySelectorAll(
+      ".experience-card, .skill-card, #projetos .project-card"
+    );
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("show");
+          } else {
+            entry.target.classList.remove("show");
+          }
+        });
+      },
+      {
+        threshold: 0,
+        rootMargin: "0px 0px 100px 0px"
+      }
+    );
+
+    elements.forEach((element, index) => {
+      element.style.transitionDelay = `${(index % 3) * 120}ms`;
+
+      element.classList.add("reveal");
+      observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <main
       style={{
@@ -32,16 +67,28 @@ function Home() {
     >
       {/* INÍCIO */}
       <section id="inicio">
-        <h1>Olá, eu sou Luis Felipe!</h1>
+        <div className="hero-container">
 
-        <h2>
-          Técnico de Suporte N2 | Desenvolvedor Full Stack em formação
-        </h2>
+          <div className="hero-text">
+            <h1>Olá, eu sou Luis Felipe!</h1>
+            
+            <h2>
+              Técnico de Suporte N2 | Desenvolvedor Full Stack em formação
+            </h2>
 
-        <p>
-          Profissional de Tecnologia da Informação,
-          apaixonado por desenvolvimento e infraestrutura.
-        </p>
+            <p>
+              Profissional de Tecnologia da Informação,
+              apaixonado por desenvolvimento e infraestrutura.
+            </p>
+          </div>
+
+            <img
+          src="/images/foto-perfil.jpg"
+          alt="Foto de perfil de Luis Felipe"
+          className="profile-photo"
+          />
+
+        </div>
       </section>
 
       {/* SOBRE MIM */}
@@ -50,6 +97,9 @@ function Home() {
         style={{
           marginTop: "70px",
           maxWidth: "850px",
+          width: "100%",
+          marginLeft: "auto",
+          marginRight: "auto",
           lineHeight: "1.8"
         }}
       >
@@ -240,7 +290,7 @@ function Home() {
       padding: "25px",
       borderRadius: "12px",
       border: "1px solid #244563",
-      transition: "transform 0.3s, border 0.3s"
+      transition: "transform 0.3s, border 0.3s, opacity 0.7s ease, filter 0.7s ease"
     }}>
 
       <div style={{
@@ -266,17 +316,16 @@ function Home() {
         Java | Spring Boot | React | PostgreSQL
       </p>
 
-      <span style={{
-        display: "inline-block",
-        color: "#fbbf24",
-        background: "#3b2d13",
-        padding: "7px 12px",
-        borderRadius: "6px",
-        fontSize: "13px",
-        fontWeight: "bold"
+      <div style={{
+        display: "flex",
+        gap: "12px",
+        flexWrap: "wrap",
+        marginTop: "20px"
       }}>
-        Em desenvolvimento
-      </span>
+        <span className="project-button-disabled">
+          Projeto em desenvolvimento
+        </span>
+      </div>
 
       <p style={{
         color: "#94a3b8",
@@ -285,6 +334,12 @@ function Home() {
       }}>
         Código-fonte privado durante o desenvolvimento.
       </p>
+
+      <div style={{ marginTop: "20px" }}>
+        <span className="project-button-disabled">
+          Disponível em breve
+        </span>
+      </div>
     </article>
 
     <article className="project-card" style={{
@@ -292,7 +347,7 @@ function Home() {
       padding: "25px",
       borderRadius: "12px",
       border: "1px solid #244563",
-      transition: "transform 0.3s, border 0.3s"
+      transition: "transform 0.3s, border 0.3s, opacity 0.7s ease, filter 0.7s ease"
     }}>
       <div style={{
         display: "flex",
@@ -316,17 +371,30 @@ function Home() {
         React | JavaScript | HTML5 | CSS3
       </p>
 
-      <span style={{
-        display: "inline-block",
-        color: "#fbbf24",
-        background: "#3b2d13",
-        padding: "7px 12px",
-        borderRadius: "6px",
-        fontSize: "13px",
-        fontWeight: "bold"
-      }}>
-        Em desenvolvimento
-      </span>
+    <div style={{
+      display: "flex",
+      gap: "12px",
+      flexWrap: "wrap",
+      marginTop: "20px"
+    }}>
+      <a
+        href="https://portf-lio-react-three.vercel.app/"
+        target="_blank"
+        rel="noreferrer"
+        className="project-button"
+      >
+        Ver Projeto
+      </a>
+
+      <a
+        href="https://github.com/lfsantos91/portf-lio-react"
+        target="_blank"
+        rel="noreferrer"
+        className="project-button"
+      >
+        Ver Código
+      </a>
+    </div>
 
     </article>
 
@@ -362,6 +430,7 @@ function Home() {
     >
       <a
         href="mailto:lfsantos9195@gmail.com"
+        className="contact-button"
         style={contactStyle}
       >
         <strong>Email:</strong> lfsantos9195@gmail.com
@@ -369,6 +438,7 @@ function Home() {
 
       <a
         href="https://github.com/lfsantos91"
+        className="contact-button"
         target="_blank"
         rel="noreferrer"
         style={contactStyle}
@@ -378,14 +448,26 @@ function Home() {
 
       <a
         href="https://www.linkedin.com/in/luis-felipe1991/"
+        className="contact-button"
         target="_blank"
         rel="noreferrer"
         style={contactStyle}
       >
         <strong>LinkedIn:</strong> Meu Perfil Profissional
       </a>
-    </div>
+    </div>  
   </section>
+
+  <footer className="site-footer">
+    <p>
+      @ {new Date().getFullYear()} Luis Felipe.
+      Todos os direitos reservados.
+    </p>
+
+    <p>
+      Desenvolvido com React ❤️
+    </p>
+  </footer>
 </main>
 );
 }
