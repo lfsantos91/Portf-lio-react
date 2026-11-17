@@ -388,6 +388,10 @@ strong {
     border-radius: 7px;
     font-size: 13px;
     transition: 0.3s ease;
+    
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .skill-tag:hover {

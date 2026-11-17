@@ -1,4 +1,29 @@
 import { useEffect } from "react";
+import {
+  FaJava,
+  FaJs,
+  FaReact,
+  FaHtml5,
+  FaCss3Alt,
+  FaAws,
+  FaMicrosoft,
+  FaGitAlt,
+  FaGithub,
+  FaWindows,
+  FaNetworkWired,
+  FaServer,
+  FaUserShield,
+  FaHeadset,
+  FaCode,
+  FaTools,
+  FaChartBar
+} from "react-icons/fa";
+
+import {
+  SiSpringboot,
+  SiPostgresql,
+  SiMysql,
+} from "react-icons/si";
 
 // Estilo das habilidades
 const skillStyle = {
@@ -199,17 +224,18 @@ function Home() {
       <h3>Desenvolvimento</h3>
       <div className="skills-tags">
         {[
-          "Java",
-          "Spring Boot",
-          "JavaScript",
-          "React",
-          "HTML5",
-          "CSS3",
-          "SQL",
-          "PostgreSQL"
+          { name: "Java", icon: <FaJava /> },
+          { name: "Spring Boot", icon: <SiSpringboot /> },
+          { name: "JavaScript", icon: <FaJs /> },
+          { name: "React", icon: <FaReact /> },
+          { name: "HTML5", icon: <FaHtml5 /> },
+          { name: "CSS3", icon: <FaCss3Alt /> },
+          { name: "SQL", icon: <SiMysql /> },
+          { name: "PostgreSQL", icon: <SiPostgresql /> }
         ].map((skill) => (
-          <span key={skill} className="skill-tag">
-            {skill}
+          <span key={skill.name} className="skill-tag">
+            {skill.icon}
+            {skill.name}
           </span>
         ))}
       </div>
@@ -219,17 +245,18 @@ function Home() {
       <h3>Suporte e Infraestrutura</h3>
       <div className="skills-tags">
         {[
-          "Windows 10/11",
-          "Active Directory",
-          "Microsoft Entra ID",
-          "Microsoft Exchange",
-          "Microsoft 365",
-          "Suporte N2",
-          "Administração de acessos",
-          "Redes de computadores"
+          { name: "Windows 10/11", icon: <FaWindows /> },
+          { name: "Active Directory", icon: <FaServer /> },
+          { name: "Microsoft Entra ID", icon: <FaUserShield /> },
+          { name: "Microsoft Exchange", icon: <FaServer /> },
+          { name: "Microsoft 365", icon: <FaMicrosoft /> },
+          { name: "Suporte N2", icon: <FaHeadset /> },
+          { name: "Administração de acessos", icon: <FaUserShield /> },
+          { name: "Redes de computadores", icon: <FaNetworkWired /> }
         ].map((skill) => (
-          <span key={skill} className="skill-tag">
-            {skill}
+          <span key={skill.name} className="skill-tag">
+            {skill.icon}
+            {skill.name}
           </span>
         ))}
       </div>
@@ -239,15 +266,16 @@ function Home() {
       <h3>Cloud e ferramentas</h3>
       <div className="skills-tags">
         {[
-          "AWS",
-          "Microsoft Azure",
-          "Git",
-          "GitHub",
-          "VS Code",
-          "Power BI"
+          { name: "AWS", icon: <FaAws /> },
+          { name: "Microsoft Azure", icon: <FaMicrosoft /> },
+          { name: "Git", icon: <FaGitAlt /> },
+          { name: "GitHub", icon: <FaGithub /> },
+          { name: "VS Code", icon: <FaCode /> },
+          { name: "Power BI", icon: <FaChartBar /> }
         ].map((skill) => (
-          <span key={skill} className="skill-tag">
-            {skill}
+          <span key={skill.name} className="skill-tag">
+            {skill.icon}
+            {skill.name}
           </span>
         ))}
       </div>
