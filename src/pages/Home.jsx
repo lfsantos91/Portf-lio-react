@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   FaJava,
   FaJs,
@@ -47,6 +47,54 @@ const contactStyle = {
 };
 
 function Home() {
+
+  const [repoStatus, setRepoStatus] = useState({
+    steam: "checking",
+    portfolio: "checking"
+  });
+
+  useEffect(() => {
+    let active = true;
+
+    async function checkRepository(repository) {
+      try {
+        const response = await fetch(
+          `https://api.github.com/repos/${repository}`,
+          { cache: "no-store" }
+        );
+
+        if (response.ok) return "public";
+        if (response.status === 404) return "private";
+
+        return "error";
+      } catch {
+        return "error";
+      }
+    }
+
+    async function updateRepositoryStatus() {
+      const [steam, portfolio] = await Promise.all([
+        checkRepository("lfsantos91/task-manager"),
+        checkRepository("lfsantos91/portf-lio-react")
+      ]);
+
+      if (active) {
+        setRepoStatus({ steam, portfolio });
+      }
+    }
+
+    updateRepositoryStatus();
+
+    const interval = setInterval(
+      updateRepositoryStatus,
+      5 * 60 * 1000
+    );
+
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
+  }, []);
 
   useEffect(() => {
     const elements = document.querySelectorAll(
@@ -284,6 +332,61 @@ function Home() {
   </div>
 </section>
 
+{/* CERTIFICAÇÕES */}
+<section id="certificacoes" className="certifications-section">
+
+  <h2>Certificações e Formação Complementar</h2>
+
+  <div className="certifications-grid">
+
+    <article className="certification-card">
+      <div className="certification-icon">
+        <FaMicrosoft />
+      </div>
+      <h3>Preparatório Microsoft Azure Fundamentals</h3>
+      <p>AZ-900 | Kasolution | 2025</p>
+      <span className="certification-status completed">
+        Curso preparatório concluído
+      </span>
+    </article>
+
+    <article className="certification-card">
+      <div className="certification-icon">
+        <FaCode />
+      </div>
+      <h3>Oracle Next Education</h3>
+      <p>Oracle e Alura | 2024</p>
+      <span className="certification-status completed">
+        Formação concluída
+      </span>
+    </article>
+
+    <article className="certification-card">
+      <div className="certification-icon">
+        <FaJava />
+      </div>
+      <h3>Desenvolvimento Java</h3>
+      <p>Alura | Java, Spring Boot e SQL | 2025</p>
+      <span className="certification-status completed">
+        Cursos concluídos
+      </span>
+    </article>
+
+    <article className="certification-card">
+      <div className="certification-icon">
+        <FaAws />
+      </div>
+      <h3>AWS Cloud Practitioner</h3>
+      <p>Amazon Web Services | AWS Skill Builder | 2026</p>
+      <span className="certification-status completed">
+        Curso concluído | Prova pendente
+      </span>
+    </article>
+
+  </div>
+
+</section>
+
 {/* PORTFÓLIO */}
 <section
   id="projetos"
@@ -333,15 +436,53 @@ function Home() {
         </h3>
       </div>
 
+      <span style={{
+        display: "inline-block",
+        color: repoStatus.steam === "public" ? "#4ade80" : "#f87171",
+        background: repoStatus.steam === "public"
+          ? "rgba(74, 222, 128, 0.12)"
+          : "rgba(248, 113, 113,0.12)",
+        border: `1px solid ${
+          repoStatus.steam === "public"
+            ? "rgba(74, 222, 128, 0.35)"
+            : "rgba(248, 113, 113, 0.35)"
+        }`,
+        padding: "5px 10px",
+        borderRadius: "20px",
+        fontSize: "12px",
+        marginBottom: "12px"
+      }}>
+        ● {
+          repoStatus.steam === "checking"
+            ? "Verificando GitHub..."
+            : repoStatus.steam === "public"
+              ? "Código público no GitHub"
+              : repoStatus.steam === "private"
+                ? "Código privado ou indisponível"
+                : "Não foi possível verificar"
+        }
+      </span>
+
       <p style={{ color: "#cbd5e1", lineHeight: "1.7" }}>
-        Aplicação desenvolvida para acompanhar o 
-        progresso dos jogos, identificar conquistas
-        pendentes e monitorar jogos próximos de 
-        100% de conclusão.
+        Aplicação em desenvolvimento que utiliza integração 
+        com o Steam para acompanhar o progresso dos jogos,
+        identificar conquistas pendentes e monitorar
+        o percentual de conclusão de cada jogo.
       </p>
 
       <p style={{ color: "#38bdf8", lineHeight: "1.8" }}>
         Java | Spring Boot | React | PostgreSQL
+      </p>
+
+      <p style={{
+        color: "#94a3b8",
+        fontSize: "13px",
+        lineHeight: "1.6",
+        marginTop: "12px"
+      }}>
+        <strong style={{ color: "#38bdf8" }}>Objetivo:</strong>{" "}
+        Centralizar informações de progresso e conquistas
+        para facilitar o acompanhamento da evolução nos jogos.
       </p>
 
       <div style={{
@@ -350,23 +491,28 @@ function Home() {
         flexWrap: "wrap",
         marginTop: "20px"
       }}>
-        <span className="project-button-disabled">
-          Projeto em desenvolvimento
-        </span>
+        
       </div>
 
-      <p style={{
-        color: "#94a3b8",
-        fontSize: "13px",
-        marginTop: "15px"
-      }}>
-        Código-fonte privado durante o desenvolvimento.
-      </p>
-
       <div style={{ marginTop: "20px" }}>
-        <span className="project-button-disabled">
-          Disponível em breve
-        </span>
+        {repoStatus.steam === "public" ? (
+          <a
+            href="https://github.com/lfsantos91/task-manager"
+            target="_blank"
+            rel="noreferrer"
+            className="project-button"
+          >
+            Ver código no GitHub
+          </a>
+        ) : (
+          <span className="project-button-disabled">
+            {repoStatus.steam === "checking"
+              ? "Verificando disponibilidade..."
+              : repoStatus.steam === "private"
+                ? "Código em desenvolvimento"
+                : "Código temporariamente indisponível"}
+          </span>
+        )}
       </div>
     </article>
 
@@ -377,6 +523,25 @@ function Home() {
       border: "1px solid #244563",
       transition: "transform 0.3s, border 0.3s, opacity 0.7s ease, filter 0.7s ease"
     }}>
+
+      <div style={{
+        marginTop: "18px",
+        marginBottom: "12px"
+      }}>
+        <span style={{
+          display: "inline-block",
+          color: "#facc15",
+          background: "rgba(250, 204, 21, 0.12)",
+          border: "1px solid rgba(250, 204, 21, 0.35)",
+          padding: "6px 12px",
+          borderRadius: "20px",
+          fontSize: "12px",
+          fontWeight: "bold"
+        }}>
+          ● Projeto em desenvolvimento
+        </span>
+      </div>
+
       <div style={{
         display: "flex",
         alignItems: "center",
@@ -388,6 +553,49 @@ function Home() {
         Portfólio Profissional
       </h3>
       </div>
+
+      <span style={{
+        display: "inline-block",
+        color: repoStatus.portfolio === "public" ? "#4ade80" : "#f87171",
+        background: repoStatus.portfolio === "public"
+          ? "rgba(74, 222, 128, 0.12)"
+          : "rgba(248, 113, 113, 0.12)",
+        border: `1px solid ${
+          repoStatus.portfolio === "public"
+            ? "rgba(74, 222, 128, 0.35)"
+            : "rgba(248, 113, 113, 0.35)"
+        }`,
+        padding: "6px 12px",
+        borderRadius: "20px",
+        fontSize: "12px",
+        fontWeight: "bold",
+        marginBottom: "12px"
+      }}>
+        ● {
+          repoStatus.portfolio === "checking"
+            ? "Verificando GitHub..."
+            : repoStatus.portfolio === "public"
+              ? "Código público no GitHub"
+              : repoStatus.portfolio === "private"
+                ? "Código privado ou indisponível"
+                : "Não foi possível verificar"
+        }
+      </span>
+
+      <img
+        src="/images/portfolio-preview.png"
+        alt="Prévia do portfólio profissional"
+        style={{
+          width: "100%",
+          height: "180px",
+          objectFit: "cover",
+          objectPosition: "top",
+          borderRadius: "8px",
+          border: "1px solid #244563",
+          marginTop: "10px",
+          marginBottom: "15px"
+        }}
+      />
 
       <p style={{ color: "#cbd5e1", lineHeight: "1.7" }}>
         Website responsivo desenvolvido para apresentar
@@ -425,8 +633,8 @@ function Home() {
     </div>
 
     </article>
-
   </div>
+
 </section>
 
 {/* CONTATO */}
